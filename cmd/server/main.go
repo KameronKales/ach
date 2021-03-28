@@ -37,7 +37,7 @@ import (
 )
 
 var (
-	httpAddr  = flag.String("http.addr", bind.HTTP("ach"), "HTTP listen address")
+	httpAddr  = os.Getenv("PORT");
 	adminAddr = flag.String("admin.addr", bind.Admin("ach"), "Admin HTTP listen address")
 
 	flagLogFormat = flag.String("log.format", "", "Format for log lines (Options: json, plain")
