@@ -129,7 +129,7 @@ func main() {
 
 	// Start main HTTP server
 	go func() {
-		logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", *httpAddr))
+		logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", httpAddr))
 		if err := serve.ListenAndServe(); err != nil {
 			errs <- err
 			logger.Log("exit", err)
