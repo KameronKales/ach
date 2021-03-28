@@ -51,19 +51,6 @@ var (
 func main() {
 	flag.Parse()
 
-	// Setup logging, default to stdout
-	if v := os.Getenv("LOG_FORMAT"); v != "" {
-		*flagLogFormat = v
-	}
-	if *flagLogFormat == "json" {
-		logger = log.NewJSONLogger(os.Stdout)
-	} else {
-		logger = log.NewLogfmtLogger(os.Stdout)
-	}
-	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
-	logger = log.With(logger, "caller", log.DefaultCaller)
-	logger.Log("startup", fmt.Sprintf("Starting ach server version %s", ach.Version))
-
 	// Setup underlying ach service
 	var achFileTTL time.Duration
 	if v := os.Getenv("ACH_FILE_TTL"); v != "" {
@@ -109,28 +96,10 @@ func main() {
 		}
 	}
 
-	// Check to see if our -admin.addr flag has been overridden
-	if v := os.Getenv("HTTP_ADMIN_BIND_ADDRESS"); v != "" {
-		*adminAddr = v
-	}
-
-	// Admin server (metrics and debugging)
-	adminServer := admin.NewServer(*adminAddr)
-	adminServer.AddVersionHandler(ach.Version) // Setup 'GET /version'
-	go func() {
-		logger.Log("admin", fmt.Sprintf("listening on %s", adminServer.BindAddr()))
-		if err := adminServer.Listen(); err != nil {
-			err = fmt.Errorf("problem starting admin http: %v", err)
-			logger.Log("admin", err)
-			errs <- err
-		}
-	}()
-	defer adminServer.Shutdown()
-
 	// Start main HTTP server
 	go func() {
 		logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", httpAddr))
-		if err := serve.ListenAndServe(); err != nil {
+		if err := serve.ListenAndServe(":"+httpAddr); err != nil {
 			errs <- err
 			logger.Log("exit", err)
 		}
