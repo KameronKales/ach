@@ -91,11 +91,6 @@ func main() {
 	writTimeout, _ := time.ParseDuration("30s")
 	idleTimeout, _ := time.ParseDuration("60s")
 
-	// Check to see if our -http.addr flag has been overridden
-	if v := os.Getenv("HTTP_BIND_ADDRESS"); v != "" {
-		*httpAddr = v
-	}
-
 	serve := &http.Server{
 		Addr:    *httpAddr,
 		Handler: handler,
