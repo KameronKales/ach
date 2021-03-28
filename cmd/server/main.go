@@ -77,7 +77,7 @@ func main() {
 	idleTimeout, _ := time.ParseDuration("60s")
 
 	serve := &http.Server{
-		Addr:  httpAddr,
+		Addr:  *httpAddr,
 		Handler: handler,
 		TLSConfig: &tls.Config{
 			InsecureSkipVerify:       false,
