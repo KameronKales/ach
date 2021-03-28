@@ -79,6 +79,11 @@ func main() {
 	serve := &http.Server{
 		Addr:  *httpAddr,
 		Handler: handler,
+		TLSConfig: &tls.Config{
+			InsecureSkipVerify:       false,
+			PreferServerCipherSuites: true,
+			MinVersion:               tls.VersionTLS12,
+		},
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writTimeout,
 		IdleTimeout:  idleTimeout,
