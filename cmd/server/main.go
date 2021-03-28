@@ -134,18 +134,10 @@ func main() {
 
 	// Start main HTTP server
 	go func() {
-		if certFile, keyFile := os.Getenv("HTTPS_CERT_FILE"), os.Getenv("HTTPS_KEY_FILE"); certFile != "" && keyFile != "" {
-			logger.Log("startup", fmt.Sprintf("binding to %s for secure HTTP server", *httpAddr))
-			if err := serve.ListenAndServeTLS(certFile, keyFile); err != nil {
-				errs <- err
-				logger.Log("exit", err)
-			}
-		} else {
-			logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", *httpAddr))
-			if err := serve.ListenAndServe(); err != nil {
-				errs <- err
-				logger.Log("exit", err)
-			}
+		logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", *httpAddr))
+		if err := serve.ListenAndServe(); err != nil {
+			errs <- err
+			logger.Log("exit", err)
 		}
 	}()
 
