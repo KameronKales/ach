@@ -79,7 +79,7 @@ func main() {
 	idleTimeout, _ := time.ParseDuration("60s")
 
 	serve := &http.Server{
-		Addr:    httpAddr,
+		Addr:   ":" + httpAddr,
 		Handler: handler,
 		TLSConfig: &tls.Config{
 			InsecureSkipVerify:       false,
@@ -99,7 +99,7 @@ func main() {
 	// Start main HTTP server
 	go func() {
 		logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", httpAddr))
-		if err := serve.ListenAndServe(":"+httpAddr); err != nil {
+		if err := serve.ListenAndServe(); err != nil {
 			errs <- err
 			logger.Log("exit", err)
 		}
