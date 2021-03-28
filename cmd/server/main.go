@@ -79,11 +79,6 @@ func main() {
 	serve := &http.Server{
 		Addr:  *httpAddr,
 		Handler: handler,
-		TLSConfig: &tls.Config{
-			InsecureSkipVerify:       false,
-			PreferServerCipherSuites: true,
-			MinVersion:               tls.VersionTLS12,
-		},
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writTimeout,
 		IdleTimeout:  idleTimeout,
@@ -96,7 +91,6 @@ func main() {
 
 	// Start main HTTP server
 	go func() {
-		logger.Log("startup", fmt.Sprintf("binding to %s for HTTP server", *httpAddr))
 		if err := serve.ListenAndServe(); err != nil {
 			errs <- err
 			logger.Log("exit", err)
