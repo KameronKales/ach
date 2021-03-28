@@ -28,17 +28,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/moov-io/ach"
 	"github.com/moov-io/ach/server"
-	"github.com/moov-io/base/admin"
 	"github.com/moov-io/base/http/bind"
 
 	"github.com/go-kit/kit/log"
 )
 
 var (
-	httpAddr  = os.Getenv("PORT");
-	adminAddr = flag.String("admin.addr", bind.Admin("ach"), "Admin HTTP listen address")
+	port =  os.Getenv("PORT");
+	httpAddr  = flag.String("port", bind.HTTP("ach"), "HTTP listen address")
 
 	flagLogFormat = flag.String("log.format", "", "Format for log lines (Options: json, plain")
 
@@ -79,7 +77,7 @@ func main() {
 	idleTimeout, _ := time.ParseDuration("60s")
 
 	serve := &http.Server{
-		Addr:   ":" + httpAddr,
+		Addr:  httpAddr,
 		Handler: handler,
 		TLSConfig: &tls.Config{
 			InsecureSkipVerify:       false,
